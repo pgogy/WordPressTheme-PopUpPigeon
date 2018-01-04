@@ -18,55 +18,64 @@ class popuppigeonCustomFrontPage extends WP_Customize_Control
     public function render_content()
     {
 	
-	    ?><input type="text" value="<?php echo $this->value(); ?>" <?php $this->link(); ?> /><?PHP
+	    ?><input type="text" value="<?php echo $this->value(); ?>" <?php $this->link(); ?> id="front_page_posts_list" /><?PHP
 		$data = $this->value();
 		$ids = explode(" ", trim($data));
 		$ids = array_filter($ids);
+		$excludes = array();
+		
+		$query_posts_args = array( 'post_type' => array('page','post'), 'post_status' => 'publish' );	
+
+		$query_posts = new WP_Query( $query_posts_args );
 	
 		?>
 		<div class="scroll"><ul id='pppsortable'><?PHP
 	
+	
 		foreach ( $ids as $post) {
 			$post = get_post($post);
-			echo "<li page_id='" . $post->ID . "'>Title : " . $post->post_title . "<b class='pppright ppptop'>Top</b>  <b class='pppright pppend'>Bottom</b></li>";
+			if(isset($post->ID)){
+				array_push($excludes, $post->ID);
+				echo "<li page_id='" . $post->ID . "'>Title : " . $post->post_title . "<b class='pppright ppptop'>Top</b>  <b class='pppright pppend'>Bottom</b></li>";
+			}
 		}
 		
-		$query_posts_args = array( 'post_type' => 'page', 'post_status' => 'publish' );	
-
-		$query_posts = new WP_Query( $query_posts_args );
-		
-		foreach ( $query_posts as $post) {
+		foreach ( $query_posts->posts as $post) {
 			if(isset($post->ID)){	
-				echo "<li page_id='" . $post->ID . "'>Title : " . $post->post_title . " <b class='pppright ppptop'>Jump</b>  <b class='pppright pppend'>Bottom</b></li>";
+				if(!in_array($post->ID, $excludes)){
+					echo "<li page_id='" . $post->ID . "'>Title : " . $post->post_title . " <b class='pppright ppptop'>Jump</b>  <b class='pppright pppend'>Bottom</b></li>";
+				}
 			}
 		}
 		?></ul></div>
 			<script type="text/javascript">
+				jQuery(document).keydown(function(ev) {
+					console.log(ev);
+				});
 				jQuery( ".ppptop" )
 					.each(
 						function(index, value){
 							jQuery(value)
 								.on("click", function(event){
-										list = "";
 										jQuery(event.currentTarget)
 											.parent()
 											.parent()
 											.prepend(jQuery(event.currentTarget).parent());
+										list = "";
 										jQuery( "#pppsortable" )
 											.children()
 											.each(
 												function(index, value){
-													list = list + jQuery(value).attr("page_id") + " ";
+													if(jQuery(value).attr("page_id")!=undefined){
+														list += jQuery(value).attr("page_id") + " ";
+													}
 												}
 											);
-										jQuery("#customize-control-front_page_posts_list")
-											.children()
-											.first()
+										jQuery("#front_page_posts_list")
 											.val(list);
-										jQuery("#customize-control-front_page_posts_list")
-											.children()
-											.first()
-											.trigger("keyup");
+										var e = jQuery.Event("change");	
+										jQuery("#front_page_posts_list")
+											.trigger(e);
 											
 									}
 								);
@@ -77,56 +86,49 @@ class popuppigeonCustomFrontPage extends WP_Customize_Control
 						function(index, value){
 							jQuery(value)
 								.on("click", function(event){
-										list = "";
 										jQuery(event.currentTarget)
 											.parent()
 											.parent()
 											.append(jQuery(event.currentTarget).parent());
+										list = "";
 										jQuery( "#pppsortable" )
 											.children()
 											.each(
 												function(index, value){
-													list = list + jQuery(value).attr("page_id") + " ";
+													if(jQuery(value).attr("page_id")!=undefined){
+														list += jQuery(value).attr("page_id") + " ";
+													}
 												}
 											);
-										jQuery("#customize-control-front_page_posts_list")
-											.children()
-											.first()
+										jQuery("#front_page_posts_list")
 											.val(list);
-										jQuery("#customize-control-front_page_posts_list")
-											.children()
-											.first()
-											.trigger("keyup");
-											
+										var e = jQuery.Event("change");	
+										jQuery("#front_page_posts_list")
+											.trigger(e);
 									}
 								);
 						}
 					);	
-				jQuery( "#pppsortable" ).sortable();
 				jQuery( "#pppsortable" ).disableSelection();	
 				jQuery( "#pppsortable" )
-					.droppable({
-					  hoverClass: "sortable-ui-state-hover",
-					  drop: function( event, ui ) {
-							list = jQuery(ui.draggable[0]).attr("page_id") + " ";
+					.sortable({
+						hoverClass: "sortable-ui-state-hover",
+						stop: function( event, ui ) {
+							list = "";
 							jQuery( "#pppsortable" )
 								.children()
 								.each(
 									function(index, value){
-										if(index!=0){
-											list = list + jQuery(value).attr("page_id") + " ";
+										if(jQuery(value).attr("page_id")!=undefined){
+											list += jQuery(value).attr("page_id") + " ";
 										}
 									}
 								);
-							jQuery("#customize-control-front_page_posts_list")
-								.children()
-								.first()
+							jQuery("#front_page_posts_list")
 								.val(list);
-							jQuery("#customize-control-front_page_posts_list")
-								.children()
-								.first()
-								.trigger("keyup");
-								
+							var e = jQuery.Event("change");	
+							jQuery("#front_page_posts_list")
+								.trigger(e);								
 						}
 					}
 				);
