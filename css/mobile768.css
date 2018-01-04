@@ -1,0 +1,74 @@
+@media screen and (max-width: 768px) {
+
+	html main{
+		width: 100%;
+	}
+
+	div.site-branding a{
+		font-size: 35px;
+	}
+
+	html .home article,
+	html .category article,
+	html .tag article,
+	html .search article,
+	html .author article{
+    	position: relative;
+    	width: 100%;
+    	text-align: center;
+		display: inline-block;	
+		vertical-align: top;
+	}
+	
+	html .single article{
+    	margin-top: -10px;
+	}
+
+	.category article .entry-title,
+	 .search article .entry-title, 
+	.author article .entry-title, 
+	.tag article .entry-title{
+		margin-top: 35px;
+	}
+
+	#primary-navigation{
+		font-size:20px;
+	}
+
+	body article .entry-content{
+		font-size: 25px;
+	}
+
+	.single #main article{
+		width: 100%;
+	}
+
+	body #sidebar-right{
+		width: 100%;
+		float: none;
+		margin: 10px 0px;
+	}
+	
+	body #sidebar-bottom aside{
+		float: none;
+		width: 90%;
+		padding: 0% 5%;
+		margin-left: 0px;
+	}
+	
+	html .page-footer h1 span,
+	html .page-footer h1 a {
+		text-decoration: none;
+		padding: 0px 10px;
+		margin: 0px 5px;
+	}
+	
+	html .page-footer h1.pagination{
+		padding: 0px;
+	}
+	
+	html footer.page-footer h1.pagination span.more{
+		padding: 0px;
+	}
+	
+}

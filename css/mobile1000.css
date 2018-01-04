@@ -1,0 +1,15 @@
+@media screen and (max-width: 1100px) {
+
+	body.home article .entry-header h1 a{
+		font-size:40px;
+	}
+
+	body.category article .entry-header h2 a,
+	body.tag article .entry-header h2 a,
+	body.author article .entry-header h2 a,
+	body.archive article .entry-header h2 a,
+	body.search article .entry-header h2 a{
+		font-size:25px;
+	}
+
+}
